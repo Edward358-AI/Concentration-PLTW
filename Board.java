@@ -1,3 +1,5 @@
+import java.util.*;
+
 /** 
  * A game board of NxM board of tiles.
  * 
@@ -25,9 +27,10 @@ public class Board
    */
   public Board()
   {
-   
-    /* your code here */ 
-
+    ArrayList<String> values = new ArrayList<String>(Arrays.asList(tileValues));
+    for (int i = 0; i < gameboard.length; i++) {
+      for (int j = 0; j < gameboard[i].length; j++) gameboard[i][j] = new Tile(values.remove((int) (Math.random() * values.size())));
+    }
   }
 
  /** 
@@ -41,10 +44,15 @@ public class Board
    */
   public String toString()
   {
+    String result = "      1       2       3       4\n\n";
+    for (int i = 0; i < gameboard.length; i++) {
+      result += (i+1) + "   ";
+      for (int j = 0; j < gameboard[i].length; j++) result += (gameboard[i][j].isShowingValue() ? gameboard[i][j].getValue() : gameboard[i][j].getHidden()) + "   ";
+      result += "\n\n";
+
+    }
  
-    /* your code here */
- 
-    return "";
+    return result;
   }
 
   /** 
@@ -57,8 +65,9 @@ public class Board
    */
   public boolean allTilesMatch()
   {
-
-    /* your code  here */
+    for (int i = 0; i < gameboard.length; i++) {
+      for (int j = 0; j < gameboard[i].length; j++) if (!gameboard[i][j].isShowingValue()) return false;
+    }
     
     return true;
   }
@@ -76,8 +85,7 @@ public class Board
    */
   public void showValue (int row, int column)
   {
-   
-    /* your code here */
+    gameboard[row-1][column-1].show();
   }  
 
   /** 
@@ -100,8 +108,19 @@ public class Board
   public String checkForMatch(int row1, int col1, int row2, int col2)
   {
     String msg = "";
-
-     /* your code here */
+    row1 -= 1;
+    row2 -= 1;
+    col1 -= 1;
+    col2 -= 1;
+    if (gameboard[row1][col1].equals(gameboard[row2][col2])) {
+      gameboard[row1][col1].foundMatch();
+      gameboard[row2][col2].foundMatch();
+      msg = "You found a match! Congrats!";
+    } else {
+      gameboard[row1][col1].hide();
+      gameboard[row2][col2].hide();
+      msg = "Try again! You didn't find a match :(";
+    }
     
      return msg;
   }
@@ -116,8 +135,10 @@ public class Board
    */
   public boolean validateSelection(int row, int col)
   {
-
-    /* your code here */
+    row -= 1;
+    col -= 1;
+    if (row < 0 || col < 0 || row >= gameboard.length || col > gameboard[0].length) return false;
+    if (gameboard[row][col].matched() || gameboard[row][col].isShowingValue()) return false;
 
     return true;
   }
