@@ -16,6 +16,7 @@ import java.util.Scanner;
  */
 public class Game
 {
+  private int attempts = 0;
   private Scanner in = new Scanner(System.in);
 
   private Board board;
@@ -76,6 +77,7 @@ public class Game
       // determine if tiles match
       String matched = board.checkForMatch(row1, col1, row2, col2);
       System.out.println(matched);
+      attempts++;
 
       // wait 2 seconds to start the next turn
       wait(2); 
@@ -83,6 +85,7 @@ public class Game
 
     displayBoard();
     System.out.println("Game Over!");
+    System.out.println("It took you " + attempts + " turns to match them all!");
   }
 
   /**
